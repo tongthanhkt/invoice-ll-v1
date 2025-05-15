@@ -1,13 +1,22 @@
-// Components
-import { InvoiceMain } from "@/app/components";
-import Link from "next/link";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
-  return (
-    <main className="p-10 ">
-      <Link href="/invoice" className="px-2 py-1 rounded-lg bg-blue-50">
-        To Invoice
-      </Link>
-    </main>
-  );
+  const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading) {
+      if (user) {
+        router.push("/invoice");
+      } else {
+        router.push("/login");
+      }
+    }
+  }, [user, router, loading]);
+
+  return null;
 }

@@ -7,15 +7,15 @@ import { InvoiceMain } from "@/app/components";
 
 export default function InvoicePage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       router.push("/login");
     }
-  }, [user, router]);
+  }, [user, router, loading]);
 
-  if (!user) {
+  if (loading || !user) {
     return null;
   }
 

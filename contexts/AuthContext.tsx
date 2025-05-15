@@ -39,7 +39,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         spinnerService.startSpinner();
         const userData = await authService.getProfile();
-        console.log("🚀 ~ checkAuth ~ userData:", userData);
         setUser(userData);
       } catch (error) {
         setUser(null);
@@ -84,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const userData = await authService.register({ name, email, password });
         setUser(userData);
-        router.push("/dashboard");
+        router.push("/invoice");
       } catch (error) {
         console.error("Registration failed:", error);
         throw error;

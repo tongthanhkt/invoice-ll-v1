@@ -56,7 +56,7 @@ export const AuthLayout = ({
             <div className={styles.form__footer}>
               <div>
                 ©{" "}
-                <a href="/" className={styles.copyright}>
+                <a href="#" className={styles.copyright}>
                   Invoify
                 </a>
                 . All rights reserved.
