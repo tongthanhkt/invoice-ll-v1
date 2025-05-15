@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
 // RHF
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch } from 'react-hook-form';
 
 // ShadCn
-import { Label } from "@/components/ui/label";
+import { Label } from '@/components/ui/label';
 
 // Components
-import { DatePickerFormField } from "@/app/components";
+import { DatePickerFormField } from '@/app/components';
 
 // Contexts
-import { useInvoiceContext } from "@/contexts/InvoiceContext";
-import { useTranslationContext } from "@/contexts/TranslationContext";
-import { InvoiceContainer } from "./InvoiceContainer";
-import { InvoiceItemTable } from "./InvoiceItemTable";
-import { PayerSection } from "./PayerSection";
-import { ReceiverSection } from "./ReceiverSection";
-import { VoucherSection } from "./VoucherSection";
+import { useInvoiceContext } from '@/contexts/InvoiceContext';
+import { useTranslationContext } from '@/contexts/TranslationContext';
+import { InvoiceContainer } from './InvoiceContainer';
+import { InvoiceItemTable } from './InvoiceItemTable';
+import { PayerSection } from './PayerSection';
+import { ReceiverSection } from './ReceiverSection';
+import { VoucherSection } from './VoucherSection';
 
 interface Payer {
   _id: string;
@@ -79,12 +79,12 @@ const InvoiceForm = () => {
           receiverEmailsResponse,
           receiverAddressesResponse,
         ] = await Promise.all([
-          fetch("/api/payers"),
-          fetch("/api/receivers"),
-          fetch("/api/payer-emails"),
-          fetch("/api/payer-addresses"),
-          fetch("/api/receiver-emails"),
-          fetch("/api/receiver-addresses"),
+          fetch('/api/payers'),
+          fetch('/api/receivers'),
+          fetch('/api/payer-emails'),
+          fetch('/api/payer-addresses'),
+          fetch('/api/receiver-emails'),
+          fetch('/api/receiver-addresses'),
         ]);
 
         if (payersResponse.ok) {
@@ -206,7 +206,7 @@ const InvoiceForm = () => {
           });
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
@@ -215,7 +215,7 @@ const InvoiceForm = () => {
 
   // Get invoice number variable
   const invoiceNumber = useWatch({
-    name: "details.invoiceNumber",
+    name: 'details.invoiceNumber',
     control,
   });
 
@@ -226,33 +226,33 @@ const InvoiceForm = () => {
     const currentValues = getValues();
     setInvoiceData({
       payer: {
-        name: currentValues.payer?.name || "",
-        email: currentValues.payer?.email || "",
-        address: currentValues.payer?.address || "",
+        name: currentValues.payer?.name || '',
+        email: currentValues.payer?.email || '',
+        address: currentValues.payer?.address || '',
       },
       receiver: {
-        name: currentValues.receiver?.name || "",
-        address: currentValues.receiver?.address || "",
-        zipCode: currentValues.receiver?.zipCode || "",
-        city: currentValues.receiver?.city || "",
-        country: currentValues.receiver?.country || "",
-        email: currentValues.receiver?.email || "",
-        phone: currentValues.receiver?.phone || "",
+        name: currentValues.receiver?.name || '',
+        address: currentValues.receiver?.address || '',
+        zipCode: currentValues.receiver?.zipCode || '',
+        city: currentValues.receiver?.city || '',
+        country: currentValues.receiver?.country || '',
+        email: currentValues.receiver?.email || '',
+        phone: currentValues.receiver?.phone || '',
         customInputs: currentValues.receiver?.customInputs || [],
       },
       details: {
-        currency: currentValues.details?.currency || "",
-        invoiceNumber: currentValues.details?.invoiceNumber || "",
-        invoiceDate: currentValues.details?.invoiceDate || "",
-        dueDate: currentValues.details?.dueDate || "",
-        language: currentValues.details?.language || "",
+        currency: currentValues.details?.currency || '',
+        invoiceNumber: currentValues.details?.invoiceNumber || '',
+        invoiceDate: currentValues.details?.invoiceDate || '',
+        dueDate: currentValues.details?.dueDate || '',
+        language: currentValues.details?.language || '',
         items: currentValues.details?.items || [],
         subTotal: currentValues.details?.subTotal || 0,
         totalAmount: currentValues.details?.totalAmount || 0,
-        totalAmountInWords: currentValues.details?.totalAmountInWords || "",
-        paymentTerms: currentValues.details?.paymentTerms || "",
-        pdfTemplate: currentValues.details?.pdfTemplate || "1",
-        updatedAt: currentValues.details?.updatedAt || "",
+        totalAmountInWords: currentValues.details?.totalAmountInWords || '',
+        paymentTerms: currentValues.details?.paymentTerms || '',
+        pdfTemplate: currentValues.details?.pdfTemplate || '1',
+        updatedAt: currentValues.details?.updatedAt || '',
       },
     });
   }, []);
@@ -265,7 +265,7 @@ const InvoiceForm = () => {
         value: selectedPayer._id,
         label: selectedPayer.name,
       });
-      setValue("payer.name", selectedPayer.name);
+      setValue('payer.name', selectedPayer.name);
     }
   };
 
@@ -277,8 +277,8 @@ const InvoiceForm = () => {
         value: selectedReceiver._id,
         label: selectedReceiver.name,
       });
-      setValue("receiver.name", selectedReceiver.name);
-      setValue("receiver.email", selectedReceiver.emails[0] || "");
+      setValue('receiver.name', selectedReceiver.name);
+      setValue('receiver.email', selectedReceiver.emails[0] || '');
     }
   };
 
@@ -288,7 +288,7 @@ const InvoiceForm = () => {
     if (invoiceNumber) {
       return `#${invoiceNumber}`;
     } else {
-      return "New Invoice";
+      return 'New Invoice';
     }
   }, [invoiceNumber]);
 
@@ -297,7 +297,7 @@ const InvoiceForm = () => {
       <div className="space-y-8">
         {/* Voucher Details */}
         <VoucherSection numberTitle="Invoice Number">
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
               <Label className="text-sm font-medium text-neutral-700">
                 Date

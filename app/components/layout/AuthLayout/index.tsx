@@ -1,8 +1,8 @@
-import Link from "next/link";
-import React from "react";
-import bannerImg from "@/public/assets/img/banner/auth.svg";
-import Image from "next/image";
-import styles from "./styles.module.scss";
+import bannerImg from '@/public/assets/img/banner/auth.svg';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import styles from './styles.module.scss';
 
 type AuthLayoutProps = {
   children: React.ReactNode;
@@ -48,14 +48,14 @@ export const AuthLayout = ({
             {children}
 
             <p className={styles.form__link}>
-              {footerConfig.description}{" "}
+              {footerConfig.description}{' '}
               <Link href={footerConfig.link} className={styles.link}>
                 {footerConfig.linkText}
               </Link>
             </p>
             <div className={styles.form__footer}>
               <div>
-                ©{" "}
+                ©{' '}
                 <a href="#" className={styles.copyright}>
                   Invoify
                 </a>
@@ -63,7 +63,7 @@ export const AuthLayout = ({
               </div>
               <div className={styles.support}>
                 <a href="/support">
-                  Support{" "}
+                  Support{' '}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
