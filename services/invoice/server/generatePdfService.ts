@@ -34,13 +34,12 @@ export async function generatePdfService(req: NextRequest) {
 		if (ENV === "production") {
 			const puppeteer = await import("puppeteer-core");
 			// Set up Chromium for AWS Lambda
-			await chromium.font();
+			await chromium.font('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 			browser = await puppeteer.launch({
 				args: chromium.args,
 				defaultViewport: chromium.defaultViewport,
 				executablePath: await chromium.executablePath(CHROMIUM_EXECUTABLE_PATH),
 				headless: true,
-				ignoreHTTPSErrors: true,
 			});
 		} else {
 			const puppeteer = await import("puppeteer");
