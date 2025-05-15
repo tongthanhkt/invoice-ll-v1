@@ -49,10 +49,10 @@ export async function generatePdfService(req: NextRequest) {
 				'--disable-site-isolation-trials'
 			];
 
-			// Get the executable path
-			const executablePath = process.env.AWS_LAMBDA_FUNCTION_VERSION
-				? await chromium.executablePath()
-				: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath();
+			// Get the executable path for Vercel
+			const executablePath = process.env.CHROME_EXECUTABLE_PATH
+				? '/tmp/chromium'
+				: await chromium.executablePath();
 
 			// Set up browser
 			browser = await puppeteer.launch({
