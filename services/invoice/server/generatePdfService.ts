@@ -33,12 +33,14 @@ export async function generatePdfService(req: NextRequest) {
 
 		if (ENV === "production") {
 			const puppeteer = await import("puppeteer-core");
+			// Set up Chromium for AWS Lambda
+			await chromium.font();
 			browser = await puppeteer.launch({
-				args: [...chromium.args, "--disable-dev-shm-usage"],
+				args: chromium.args,
 				defaultViewport: chromium.defaultViewport,
 				executablePath: await chromium.executablePath(CHROMIUM_EXECUTABLE_PATH),
 				headless: true,
-				ignoreDefaultArgs: ['--disable-extensions'],
+				ignoreHTTPSErrors: true,
 			});
 		} else {
 			const puppeteer = await import("puppeteer");
@@ -53,7 +55,7 @@ export async function generatePdfService(req: NextRequest) {
 		}
 
 		page = await browser.newPage();
-		await page.setContent(await htmlTemplate, {
+		await page.setContent(htmlTemplate, {
 			waitUntil: ["networkidle0", "load", "domcontentloaded"],
 			timeout: 30000,
 		});
@@ -68,6 +70,16 @@ export async function generatePdfService(req: NextRequest) {
 			preferCSSPageSize: true,
 		});
 
+		// Clean up browser resources
+		if (page) {
+			await page.close();
+		}
+		if (browser) {
+			const pages = await browser.pages();
+			await Promise.all(pages.map((p) => p.close()));
+			await browser.close();
+		}
+
 		return new NextResponse(new Blob([pdfBuffer], { type: "application/pdf" }), {
 			headers: {
 				"Content-Type": "application/pdf",
@@ -78,14 +90,7 @@ export async function generatePdfService(req: NextRequest) {
 			status: 200,
 		});
 	} catch (error) {
-		console.error("PDF Generation Error:", error);
-		return new NextResponse(JSON.stringify({ error: "Failed to generate PDF", details: error }), {
-			status: 500,
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-	} finally {
+		// Clean up browser resources in case of error
 		if (page) {
 			try {
 				await page.close();
@@ -102,5 +107,19 @@ export async function generatePdfService(req: NextRequest) {
 				console.error("Error closing browser:", e);
 			}
 		}
+
+		console.error("PDF Generation Error:", error);
+		return new NextResponse(
+			JSON.stringify({
+				error: "Failed to generate PDF",
+				details: error instanceof Error ? error.message : String(error)
+			}),
+			{
+				status: 500,
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
 	}
 }
