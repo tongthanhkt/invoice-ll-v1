@@ -7,7 +7,7 @@ import chromium from "@sparticuz/chromium";
 import { getInvoiceTemplate } from "@/lib/helpers";
 
 // Variables
-import { CHROMIUM_EXECUTABLE_PATH, ENV, TAILWIND_CDN } from "@/lib/variables";
+import { ENV, TAILWIND_CDN } from "@/lib/variables";
 
 // Types
 import { InvoiceType } from "@/types";
@@ -37,7 +37,6 @@ export async function generatePdfService(req: NextRequest) {
 			await chromium.font('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 			// Configure Chromium for serverless environment
-			const executablePath = await chromium.executablePath();
 			const args = [
 				...chromium.args,
 				'--no-sandbox',
@@ -49,6 +48,11 @@ export async function generatePdfService(req: NextRequest) {
 				'--single-process',
 				'--disable-extensions'
 			];
+
+			// Get the executable path
+			const executablePath = process.env.AWS_LAMBDA_FUNCTION_VERSION
+				? await chromium.executablePath()
+				: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath();
 
 			browser = await puppeteer.launch({
 				args,
