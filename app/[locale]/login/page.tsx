@@ -7,7 +7,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { spinnerService } from '@/services/spinner.service';
 import Link from 'next/link';
 import { useState } from 'react';
-import styles from './styles.module.scss';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -43,7 +42,7 @@ export default function LoginPage() {
         <p>Welcome back to Invoify!</p>
       </div> */}
 
-      <form className={styles.login} onSubmit={handleSubmit}>
+      <form className="space-y-4 w-full max-w-full" onSubmit={handleSubmit}>
         <FormInput
           type="text"
           required
@@ -73,7 +72,10 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        <button type="submit" className={styles.submitBtn}>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors"
+        >
           Sign in
         </button>
       </form>
