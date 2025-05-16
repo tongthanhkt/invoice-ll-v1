@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Home() {
   const router = useRouter();
-  const { user } = useAuth();
+  // const { user } = useAuth();
+  const user = JSON.parse(localStorage.getItem('user') || '{}').user;
 
   useEffect(() => {
     if (user) {
-      router.push("/invoice");
+      router.push('/invoice');
     } else {
-      router.push("/login");
+      router.push('/login');
     }
   }, [user, router]);
 

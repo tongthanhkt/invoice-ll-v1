@@ -3,7 +3,7 @@
 import { authService } from '@/services/auth/authService';
 import { LogOut } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 // Define user type interface
@@ -17,6 +17,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     // Use localStorage only in useEffect to avoid SSR issues
@@ -31,6 +32,7 @@ export default function Header() {
 
   const logout = async () => {
     await authService.logout();
+    router.push('/login');
   };
 
   const handleLogout = async () => {
