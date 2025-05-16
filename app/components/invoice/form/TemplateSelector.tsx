@@ -34,7 +34,7 @@ import { InvoiceType } from "@/types";
 const TemplateSelector = () => {
     const { watch, setValue } = useFormContext<InvoiceType>();
     const formValues = watch();
-    console.log("formValues: ", formValues);
+    // console.log("formValues: ", formValues);
     const templates = [
         {
             id: 1,

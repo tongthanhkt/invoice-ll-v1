@@ -15,7 +15,6 @@ import { FileInput } from 'lucide-react';
 
 const InvoiceActions = () => {
   const { invoicePdfLoading, invoiceData } = useInvoiceContext();
-  console.log('🚀 ~ InvoiceActions ~ invoiceData:', invoiceData);
   const { _t } = useTranslationContext();
 
   return (

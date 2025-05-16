@@ -1,20 +1,16 @@
-import React from "react";
-
 // Components
-import { InvoiceLayout } from "@/app/components";
+import { InvoiceLayout } from '@/app/components';
 
 // Helpers
-import { formatNumberWithCommas, isDataUrl } from "@/lib/helpers";
+import { formatNumberWithCommas } from '@/lib/helpers';
 
 // Variables
-import { DATE_OPTIONS } from "@/lib/variables";
+import { DATE_OPTIONS } from '@/lib/variables';
 
 // Types
-import { InvoiceType } from "@/types";
+import { InvoiceType } from '@/types';
 
 const InvoiceTemplate = (data: InvoiceType) => {
-  console.log("Call InvoiceTemplate1.tsx");
-  console.log("Data at InvoiceTemplate1.tsx", data);
   const { payer, receiver, details } = data;
 
   return (
@@ -77,7 +73,7 @@ const InvoiceTemplate = (data: InvoiceType) => {
               <span className="text-right text-sm">
                 {details.invoiceDate &&
                   new Date(details.invoiceDate).toLocaleDateString(
-                    "en-US",
+                    'en-US',
                     DATE_OPTIONS
                   )}
               </span>
@@ -114,7 +110,7 @@ const InvoiceTemplate = (data: InvoiceType) => {
                 </div>
 
                 <div className="col-span-2 p-3 text-right text-sm">
-                  {formatNumberWithCommas(Number(item.total))}{" "}
+                  {formatNumberWithCommas(Number(item.total))}{' '}
                   {details.currency}
                 </div>
               </div>
@@ -126,7 +122,7 @@ const InvoiceTemplate = (data: InvoiceType) => {
                 Total
               </div>
               <div className="col-span-2 px-2 text-right text-sm font-semibold">
-                {formatNumberWithCommas(Number(details.totalAmount))}{" "}
+                {formatNumberWithCommas(Number(details.totalAmount))}{' '}
                 {details.currency}
               </div>
             </div>

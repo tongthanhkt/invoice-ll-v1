@@ -93,7 +93,6 @@ const InvoiceMain = () => {
 
   // Watch form values for live updates
   const formValues = watch();
-  console.log('🚀 ~ InvoiceMain ~ formValues:', formValues);
 
   // // Set initial template when component mounts
   // useEffect(() => {
@@ -163,7 +162,6 @@ const InvoiceMain = () => {
       try {
         const response = await fetch('/api/payers-combined');
         const data = await response.json();
-        console.log('🚀 ~ fetchData ~ data:', data);
         // Store the complete payers data
         setPayers(data || []);
       } catch (error) {
@@ -204,8 +202,6 @@ const InvoiceMain = () => {
         return <InvoiceForm payersData={payers} receiversData={receivers} />;
     }
   };
-
-  console.log('🚀 ~ InvoiceMain ~ selectedType:', selectedType);
 
   return (
     <Form {...useFormContext<InvoiceType>()}>

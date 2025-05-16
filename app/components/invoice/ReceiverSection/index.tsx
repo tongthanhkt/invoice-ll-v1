@@ -22,7 +22,6 @@ interface ReceiverSectionProps {
 }
 
 export const ReceiverSection = ({ receiversData }: ReceiverSectionProps) => {
-  console.log('🚀 ~ ReceiverSection ~ receiversData:', receiversData);
   const methods = useFormContext();
   const { setValue } = methods;
 

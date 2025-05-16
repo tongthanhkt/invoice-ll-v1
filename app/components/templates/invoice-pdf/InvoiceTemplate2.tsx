@@ -11,8 +11,6 @@ import { DATE_OPTIONS } from '@/lib/variables';
 import { InvoiceType } from '@/types';
 
 const InvoiceTemplate2 = (data: InvoiceType) => {
-  console.log('Call InvoiceTemplate2.tsx');
-  console.log('Data at InvoiceTemplate2.tsx', data);
   const { payer, receiver, details } = data;
 
   return (
