@@ -1,31 +1,56 @@
-"use client";
+'use client';
 
-import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { LogOut } from "lucide-react";
+import { authService } from '@/services/auth/authService';
+import { LogOut } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+// Define user type interface
+interface User {
+  name: string;
+  email?: string;
+  // Add other user properties as needed
+}
 
 export default function Header() {
-  const { user, logout, loading } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    // Use localStorage only in useEffect to avoid SSR issues
+    try {
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      setUser(userData.user || null);
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      setUser(null);
+    }
+  }, []);
+
+  const logout = async () => {
+    await authService.logout();
+  };
 
   const handleLogout = async () => {
     try {
       await logout();
       // The redirect and reload will be handled by the AuthContext
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
     }
   };
-  const hidden = pathname === "/login" || pathname === "/register";
+
+  const hidden = pathname === '/login' || pathname === '/register';
+
+  if (hidden) {
+    return null; // Don't render header on login/register pages
+  }
 
   return (
-    <header
-      className={` border-b border-neutral-200 z-10 ${hidden ? "hidden" : ""}`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+    <header className="border-b border-neutral-200 z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link
@@ -76,35 +101,34 @@ export default function Header() {
           </div>
 
           {/* Desktop menu */}
-          {!loading && (
-            <div className="hidden sm:flex sm:items-center">
-              {user ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-700">{user.name}</span>
-                  <button
-                    onClick={handleLogout}
-                    className=" text-red-600  px-4 py-2 rounded-md hover:bg-red-50 transition-colors flex items-center gap-2"
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </button>
-                </div>
-              ) : // <div className="flex items-center space-x-4">
-              //   <Link
-              //     href="/login"
-              //     className="text-gray-700 hover:text-indigo-600 transition-colors"
-              //   >
-              //     Login
-              //   </Link>
-              //   <Link
-              //     href="/register"
-              //     className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-              //   >
-              //     Register
-              //   </Link>
-              // </div>
-              null}
-            </div>
-          )}
+          <div className="hidden sm:flex sm:items-center">
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-700">{user.name}</span>
+                <button
+                  onClick={handleLogout}
+                  className="text-red-600 px-4 py-2 rounded-md hover:bg-red-50 transition-colors flex items-center gap-2"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link
+                  href="/login"
+                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -126,13 +150,13 @@ export default function Header() {
               <>
                 <Link
                   href="/login"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition-colors"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition-colors"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
                 >
                   Register
                 </Link>

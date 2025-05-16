@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { useFormContext } from "react-hook-form";
-import { AppSelect } from "../../reusables/form-fields/AppSelect";
-import { SectionContainer } from "../SectionContainer";
+import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { AppSelect } from '../../reusables/form-fields/AppSelect';
+import { PayerCombined } from '../InvoiceMain';
+import { SectionContainer } from '../SectionContainer';
 
 interface Payer {
   _id: string;
@@ -18,36 +18,47 @@ interface SelectOption {
 }
 
 interface PayerSectionProps {
-  payers: Payer[];
-  payerEmails: SelectOption[];
-  payerAddresses: SelectOption[];
-  selectedPayer: SelectOption | null;
-  selectedPayerEmail: SelectOption | null;
-  selectedPayerAddress: SelectOption | null;
-  setPayers: (payers: Payer[]) => void;
-  setPayerEmails: (emails: SelectOption[]) => void;
-  setPayerAddresses: (addresses: SelectOption[]) => void;
-  setSelectedPayer: (payer: SelectOption | null) => void;
-  setSelectedPayerEmail: (email: SelectOption | null) => void;
-  setSelectedPayerAddress: (address: SelectOption | null) => void;
+  payersData?: PayerCombined;
 }
 
-export const PayerSection = ({
-  payers = [],
-  payerEmails = [],
-  payerAddresses = [],
-  selectedPayer = null,
-  selectedPayerEmail = null,
-  selectedPayerAddress = null,
-  setPayers,
-  setPayerEmails,
-  setPayerAddresses,
-  setSelectedPayer,
-  setSelectedPayerEmail,
-  setSelectedPayerAddress,
-}: PayerSectionProps) => {
+export const PayerSection = ({ payersData }: PayerSectionProps) => {
   const methods = useFormContext();
   const { setValue } = methods;
+
+  // Initialize with data from props
+  const [payers, setPayers] = useState<Payer[]>([]);
+  const [payerEmails, setPayerEmails] = useState<SelectOption[]>([]);
+  const [payerAddresses, setPayerAddresses] = useState<SelectOption[]>([]);
+
+  // Update state when props change
+  useEffect(() => {
+    if (payersData?.payers) {
+      setPayers(payersData.payers);
+    }
+
+    if (payersData?.emails) {
+      const emailOptions = payersData.emails.map((email) => ({
+        value: email.email,
+        label: email.email,
+      }));
+      setPayerEmails(emailOptions);
+    }
+
+    if (payersData?.addresses) {
+      const addressOptions = payersData.addresses.map((address) => ({
+        value: address.address,
+        label: address.address,
+      }));
+      setPayerAddresses(addressOptions);
+    }
+  }, [payersData]);
+
+  // Initialize select options
+  const [selectedPayer, setSelectedPayer] = useState<SelectOption | null>(null);
+  const [selectedPayerEmail, setSelectedPayerEmail] =
+    useState<SelectOption | null>(null);
+  const [selectedPayerAddress, setSelectedPayerAddress] =
+    useState<SelectOption | null>(null);
 
   return (
     <SectionContainer title="Payer Details">
@@ -62,19 +73,19 @@ export const PayerSection = ({
         onChange={(option: any) => {
           setSelectedPayer(option);
           if (!option) {
-            setValue("payer.name", "");
+            setValue('payer.name', '');
           } else if (option?.__isNew__) {
-            setValue("payer.name", option.label);
+            setValue('payer.name', option.label);
           } else {
-            setValue("payer.name", option.label);
+            setValue('payer.name', option.label);
           }
         }}
         onCreateOption={async (inputValue: string) => {
           try {
-            const response = await fetch("/api/payers", {
-              method: "POST",
+            const response = await fetch('/api/payers', {
+              method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify({
                 name: inputValue,
@@ -82,7 +93,7 @@ export const PayerSection = ({
             });
 
             if (!response.ok) {
-              throw new Error("Failed to create payer");
+              throw new Error('Failed to create payer');
             }
 
             const newPayer = await response.json();
@@ -91,13 +102,13 @@ export const PayerSection = ({
               value: newPayer.id,
               label: newPayer.name,
             });
-            setValue("payer.name", newPayer.name);
+            setValue('payer.name', newPayer.name);
             return {
               value: newPayer.id,
               label: newPayer.name,
             };
           } catch (error) {
-            console.error("Error creating payer:", error);
+            console.error('Error creating payer:', error);
             return null;
           }
         }}
@@ -112,19 +123,19 @@ export const PayerSection = ({
         onChange={(option: any) => {
           setSelectedPayerEmail(option);
           if (!option) {
-            setValue("payer.email", "");
+            setValue('payer.email', '');
           } else if (option?.__isNew__) {
-            setValue("payer.email", option.label);
+            setValue('payer.email', option.label);
           } else {
-            setValue("payer.email", option.value);
+            setValue('payer.email', option.value);
           }
         }}
         onCreateOption={async (inputValue: string) => {
           try {
-            const response = await fetch("/api/payer-emails", {
-              method: "POST",
+            const response = await fetch('/api/payer-emails', {
+              method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify({
                 email: inputValue,
@@ -132,7 +143,7 @@ export const PayerSection = ({
             });
 
             if (!response.ok) {
-              throw new Error("Failed to create payer email");
+              throw new Error('Failed to create payer email');
             }
 
             const newEmail = await response.json();
@@ -147,23 +158,23 @@ export const PayerSection = ({
               value: newEmail.email,
               label: newEmail.email,
             });
-            setValue("payer.email", newEmail.email);
+            setValue('payer.email', newEmail.email);
             return {
               value: newEmail.email,
               label: newEmail.email,
             };
           } catch (error) {
-            console.error("Error creating payer email:", error);
+            console.error('Error creating payer email:', error);
             return null;
           }
         }}
-        className="w-full bg-white text-gray-900"
-        classNames={{
-          control: () => "border border-gray-200 h-10 px-3 rounded-md",
-          input: () => "text-sm",
-          menu: () => "bg-white mt-1 border border-gray-200 rounded-md",
-          option: () => `text-gray-900 px-3 py-2 hover:bg-gray-100`,
-        }}
+        // className="w-full bg-white text-gray-900"
+        // classNames={{
+        //   control: () => 'border border-gray-200 h-10 px-3 rounded-md',
+        //   input: () => 'text-sm',
+        //   menu: () => 'bg-white mt-1 border border-gray-200 rounded-md',
+        //   option: () => `text-gray-900 px-3 py-2 hover:bg-gray-100`,
+        // }}
         isSearchable={true}
         isClearable={true}
       />
@@ -175,19 +186,19 @@ export const PayerSection = ({
         onChange={(option: any) => {
           setSelectedPayerAddress(option);
           if (!option) {
-            setValue("payer.address", "");
+            setValue('payer.address', '');
           } else if (option?.__isNew__) {
-            setValue("payer.address", option.label);
+            setValue('payer.address', option.label);
           } else {
-            setValue("payer.address", option.value);
+            setValue('payer.address', option.value);
           }
         }}
         onCreateOption={async (inputValue: string) => {
           try {
-            const response = await fetch("/api/payer-addresses", {
-              method: "POST",
+            const response = await fetch('/api/payer-addresses', {
+              method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify({
                 address: inputValue,
@@ -195,7 +206,7 @@ export const PayerSection = ({
             });
 
             if (!response.ok) {
-              throw new Error("Failed to create payer address");
+              throw new Error('Failed to create payer address');
             }
 
             const newAddress = await response.json();
@@ -210,13 +221,13 @@ export const PayerSection = ({
               value: newAddress.address,
               label: newAddress.address,
             });
-            setValue("payer.address", newAddress.address);
+            setValue('payer.address', newAddress.address);
             return {
               value: newAddress.address,
               label: newAddress.address,
             };
           } catch (error) {
-            console.error("Error creating payer address:", error);
+            console.error('Error creating payer address:', error);
             return null;
           }
         }}

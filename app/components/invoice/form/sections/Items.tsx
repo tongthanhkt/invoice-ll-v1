@@ -45,7 +45,7 @@ const Items = () => {
     name: ITEMS_NAME,
   });
 
-  console.log('fields', fields);
+  // console.log('fields', fields);
   const addNewField = () => {
     append({
       name: '',

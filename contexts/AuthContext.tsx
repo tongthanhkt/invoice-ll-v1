@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
+import { authService } from '@/services/auth/authService';
+import { spinnerService } from '@/services/spinner.service';
+import { User } from '@/types';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   ReactNode,
-} from "react";
-import { User } from "@/types";
-import { authService } from "@/services/auth/authService";
-import { useRouter, usePathname } from "next/navigation";
-import { spinnerService } from "@/services/spinner.service";
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface AuthContextType {
   user: User | null;
@@ -31,14 +31,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const pathname = usePathname();
+  // context
 
-  // Force re-render when route changes
+  // // Force re-render when route changes
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(true);
       try {
         spinnerService.startSpinner();
         const userData = await authService.getProfile();
+        localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
       } catch (error) {
         setUser(null);
@@ -69,11 +71,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(userData);
         // Wait for state to be updated
         await new Promise((resolve) => setTimeout(resolve, 100));
-        router.push("/invoice");
+        router.push('/invoice');
         return { success: true };
       } catch (error) {
-        console.error("Login failed:", error);
-        return { success: false, error: "Login failed" };
+        console.error('Login failed:', error);
+        return { success: false, error: 'Login failed' };
       }
     });
   };
@@ -83,9 +85,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const userData = await authService.register({ name, email, password });
         setUser(userData);
-        router.push("/invoice");
+        router.push('/invoice');
       } catch (error) {
-        console.error("Registration failed:", error);
+        console.error('Registration failed:', error);
         throw error;
       }
     });
@@ -96,10 +98,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         await authService.logout();
         setUser(null);
-        router.push("/login");
+        router.push('/login');
         router.refresh();
       } catch (error) {
-        console.error("Logout failed:", error);
+        console.error('Logout failed:', error);
         throw error;
       }
     });
@@ -124,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }

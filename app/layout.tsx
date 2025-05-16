@@ -1,14 +1,14 @@
-import { ReactNode } from "react";
-import { Poppins } from "next/font/google";
-import "@/app/globals.css";
-import { InvoiceProvider } from "@/contexts/InvoiceContext";
-import { AuthProvider } from "@/contexts/AuthContext";
-import Header from "@/components/Header";
+import '@/app/globals.css';
+import Header from '@/components/Header';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { InvoiceProvider } from '@/contexts/InvoiceContext';
+import { Poppins } from 'next/font/google';
+import { ReactNode } from 'react';
 
 const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-poppins",
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-poppins',
 });
 
 type Props = {
