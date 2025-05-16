@@ -14,7 +14,8 @@ class AuthService {
     private baseUrl: string;
 
     private constructor() {
-        this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+        this.baseUrl = "https://invoice-ll-j8qd.onrender.com/api";
+        // || 'http://localhost:3000/api';
     }
 
     public static getInstance(): AuthService {
