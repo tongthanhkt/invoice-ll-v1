@@ -31,7 +31,7 @@ export const InvoiceContainer = ({
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 bg-white h-[calc(100vh_-_196px)] overflow-y-auto">
+        <CardContent className="p-4 sm:p-6 pb-10 bg-white h-[calc(100vh_-_196px)] overflow-y-auto">
           {children}
         </CardContent>
       </div>

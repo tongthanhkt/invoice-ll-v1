@@ -40,7 +40,7 @@
   }
 
   body {
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
@@ -91,5 +91,21 @@
     -webkit-box-shadow: 0 0 0 30px white inset !important;
     -webkit-text-fill-color: oklch(37.1% 0 0) !important;
     transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+@layer utilities {
+  /* Add your custom utility classes here */
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out forwards;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
   }
 }

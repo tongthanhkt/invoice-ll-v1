@@ -14,6 +14,8 @@ import { useInvoiceContext } from '@/contexts/InvoiceContext';
 // Types
 import { InvoiceType } from '@/types';
 
+import { Button } from '@/components/ui/button';
+import { FileText, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import InvoiceActions from './InvoiceActions';
 import InvoiceForm from './InvoiceForm';
@@ -83,6 +85,7 @@ const InvoiceMain = () => {
   const [selectedType, setSelectedType] = useState(DOCUMENT_TYPES[0]); // Default to Payment voucher
   const [renderKey, setRenderKey] = useState(0); // Add key for forcing re-render
   const [sidebarMinimized, setSidebarMinimized] = useState(false);
+  const [mobileActionsVisible, setMobileActionsVisible] = useState(false);
 
   // States for data from API
   const [payers, setPayers] = useState<PayerCombined>();
@@ -148,6 +151,10 @@ const InvoiceMain = () => {
 
   const handleSidebarToggle = (minimized: boolean) => {
     setSidebarMinimized(minimized);
+  };
+
+  const toggleMobileActions = () => {
+    setMobileActionsVisible(!mobileActionsVisible);
   };
 
   // fetch api combined payers and receivers here
@@ -231,12 +238,43 @@ const InvoiceMain = () => {
             {/* Form */}
             <div className="w-full xl:flex-1">{renderForm()}</div>
 
-            {/* Actions */}
-            <div className="w-full xl:flex-1 mt-4 xl:mt-0">
+            {/* Actions for desktop */}
+            <div className="w-full hidden xl:block xl:flex-1 mt-4 xl:mt-0">
               <InvoiceActions key={renderKey} />
             </div>
           </div>
         </div>
+
+        {/* Floating action button for mobile with instruction tag */}
+        <div className="fixed bottom-6 right-6 xl:hidden z-50 flex items-center">
+          {!mobileActionsVisible && (
+            <div className="bg-slate-800 text-white text-sm rounded-lg px-3 py-2 mr-3 shadow-lg">
+              Click here to generate your PDF
+            </div>
+          )}
+          <Button
+            onClick={toggleMobileActions}
+            className="h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg flex items-center justify-center"
+            aria-label="Preview Invoice"
+          >
+            {mobileActionsVisible ? <X size={24} /> : <FileText size={24} />}
+          </Button>
+        </div>
+
+        {/* Mobile actions overlay */}
+        {mobileActionsVisible && (
+          <div className="fixed inset-0 bg-black/50 z-40 xl:hidden flex items-end">
+            <div className="bg-white w-full rounded-t-xl p-4 animate-slide-up max-h-[80vh] overflow-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold">Invoice Actions</h3>
+                <Button variant="ghost" onClick={toggleMobileActions}>
+                  <X size={24} />
+                </Button>
+              </div>
+              <InvoiceActions key={renderKey} />
+            </div>
+          </div>
+        )}
       </form>
     </Form>
   );
