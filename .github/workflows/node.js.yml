@@ -47,11 +47,11 @@ jobs:
           known_hosts: "unnecessary"
 
       - name: Upload frontend.zip to server
-        run: scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa frontend.zip ubuntu@18.143.75.112:~/
+        run: scp -o StrictHostKeyChecking=no frontend.zip ubuntu@18.143.75.112:~/
 
       - name: SSH to server, unzip and start app
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@18.143.75.112 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@18.143.75.112 << 'EOF'
             rm -rf ~/frontend
             unzip -o ~/frontend.zip -d ~/frontend
             sudo rm -rf /var/www/frontend
