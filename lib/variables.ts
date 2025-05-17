@@ -4,7 +4,7 @@ import { SignatureColor, SignatureFont } from "@/types";
 /**
  * Environment
  */
-export const ENV = process.env.NODE_ENV;
+export const ENV = "production"
 
 /**
  * Websites

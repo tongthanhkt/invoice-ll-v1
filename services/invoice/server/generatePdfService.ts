@@ -31,7 +31,10 @@ export async function generatePdfService(req: NextRequest) {
 		const InvoiceTemplate = await getInvoiceTemplate(templateId);
 		const htmlTemplate = ReactDOMServer.renderToStaticMarkup(InvoiceTemplate(body));
 
+		console.log("htmlTemplate", htmlTemplate);
+		console.log("process.env.NODE_ENV", process.env.NODE_ENV);
 		if (ENV === "production") {
+			console.log("Generating PDF in production environment");
 			const puppeteer = await import("puppeteer-core");
 			browser = await puppeteer.launch({
 				args: [...chromium.args, "--disable-dev-shm-usage"],
@@ -41,6 +44,7 @@ export async function generatePdfService(req: NextRequest) {
 				ignoreDefaultArgs: ['--disable-extensions'],
 			});
 		} else {
+			console.log("Generating PDF in development environment");
 			const puppeteer = await import("puppeteer");
 			browser = await puppeteer.launch({
 				args: ["--no-sandbox", "--disable-setuid-sandbox"],
