@@ -1,15 +1,14 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: GitHub Actions Deploy
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: PRODUCTION
 
     strategy:
@@ -17,56 +16,49 @@ jobs:
         node-version: [20.x]
 
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "🎉 Job triggered by ${{ github.event_name }}"
+      - run: echo "🐧 Running on ${{ runner.os }}"
+      - run: echo "🔎 Branch: ${{ github.ref }} | Repo: ${{ github.repository }}"
 
-      - name: Check out repository code
+      - name: Check out code
         uses: actions/checkout@v3
 
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - name: List repository files
+        run: ls -la
 
-      - name: List files in the repository
-        run: ls ${{ github.workspace }}
-
-      - name: Install dependency
+      - name: Install dependencies
         run: npm install --force
 
-      - name: Build dependency
+      - name: Build project
         run: npm run build
 
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Clean .git
+        run: rm -rf .git
 
-      - run: sudo rm -rf .git
+      - name: Zip project into frontend.zip
+        run: zip -r frontend.zip . -x "*.git*"
 
-      # --- Zip thư mục frontend trước khi deploy ---
-      - name: Zip invoice-ll folder
-        run: zip -r frontend.zip .
-
-      # Đặt SSH Key trước rsync
-      - name: Install SSH Key
+      # Add SSH key
+      - name: Setup SSH key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_KEY }}
           known_hosts: "unnecessary"
 
-      # Upload file zip qua rsync
-      - name: rsync frontend.zip
-        uses: burnett01/rsync-deployments@7.0.1
-        with:
-          switches: -avzr
-          remote_path: ~/frontend.zip
-          remote_host: 18.143.75.112
-          remote_user: ubuntu
-          remote_key: ${{ secrets.SSH_KEY }}
-
-      # SSH vào server để giải nén và khởi động app
-      - name: Unzip and start application on server
+      # Upload .zip to ~/ on server using SCP
+      - name: Upload frontend.zip to server
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@18.143.75.112 << 'EOF'
-            unzip -o ~/frontend.zip -d ~/frontend/
-            sudo cp -r ~/frontend /var/www
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa frontend.zip ubuntu@18.143.75.112:~/
+
+      # SSH to server to unzip and run app
+      - name: SSH to server, unzip and start app
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@18.143.75.112 << 'EOF'
+            rm -rf ~/frontend
+            unzip -o ~/frontend.zip -d ~/frontend
+            sudo rm -rf /var/www/frontend
+            sudo cp -r ~/frontend /var/www/frontend
             pm2 delete frontend || true
+            cd /var/www/frontend
             pm2 start npm --name "frontend" -- start
           EOF

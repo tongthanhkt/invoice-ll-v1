@@ -19,7 +19,7 @@ type AuthLayoutProps = {
 export const AuthLayout = ({ children, title, footerConfig }: AuthLayoutProps) => {
     return (
         <div
-            className="min-h-screen bg-blue-50 relative overflow-hidden">
+            className="min-h-screen bg-blue-50 flex justify-center relative overflow-hidden">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -122,7 +122,7 @@ export const AuthLayout = ({ children, title, footerConfig }: AuthLayoutProps) =
                             </div>
                             <div className="flex gap-2">
                                 <a href="/support"
-                                   className="text-blue-700 hover:underline flex flex-row-reverse items-center gap-1">
+                                    className="text-blue-700 hover:underline flex flex-row-reverse items-center gap-1">
                                     Support{" "}
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
