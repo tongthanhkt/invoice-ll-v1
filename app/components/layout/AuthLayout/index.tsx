@@ -19,7 +19,7 @@ export const AuthLayout = ({
   footerConfig,
 }: AuthLayoutProps) => {
   return (
-    <div className="min-h-screen max-w-screen-xl mx-auto relative overflow-hidden before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-40  before:bg-[url('/assets/img/banner/auth.svg')] before:bg-center before:bg-[center_10%] before:bg-no-repeat before:bg-[length:200px] before:opacity-40 lg:before:hidden">
+    <div className="min-h-screen bg-blue-50 flex justify-center relative overflow-hidden before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-40  before:bg-[url('/assets/img/banner/auth.svg')] before:bg-center before:bg-[center_10%] before:bg-no-repeat before:bg-[length:200px] before:opacity-40 lg:before:hidden">
       <div className="min-h-screen flex flex-col sm:flex-row items-center justify-center p-4 pt-16 sm:p-6 sm:pt-20 lg:p-6 relative z-10">
         <div className="hidden sm:block lg:flex-1 p-4">
           <Image

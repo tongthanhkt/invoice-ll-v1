@@ -91,7 +91,7 @@ export default async function LocaleLayout({
             <PageLoader>
               <main className="bg-white">
                 {/* <BaseNavbar /> */}
-                <div className="flex flex-col bg-blue-50 ">{children}</div>
+                <div className="flex flex-col">{children}</div>
                 {/* <BaseFooter /> */}
               </main>
               {/* Toast component */}
