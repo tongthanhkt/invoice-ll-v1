@@ -19,9 +19,9 @@ export const AuthLayout = ({
   footerConfig,
 }: AuthLayoutProps) => {
   return (
-    <div className="min-h-screen bg-blue-50  relative overflow-hidden before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-40 before:bg-blue-100 before:bg-[url('/assets/img/banner/auth.svg')] before:bg-center before:bg-[center_10%] before:bg-no-repeat before:bg-[length:200px] before:opacity-40 lg:before:hidden">
+    <div className="min-h-screen max-w-screen-xl mx-auto relative overflow-hidden before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-40  before:bg-[url('/assets/img/banner/auth.svg')] before:bg-center before:bg-[center_10%] before:bg-no-repeat before:bg-[length:200px] before:opacity-40 lg:before:hidden">
       <div className="min-h-screen flex flex-col sm:flex-row items-center justify-center p-4 pt-16 sm:p-6 sm:pt-20 lg:p-6 relative z-10">
-        <div className="hidden sm:block flex-1 p-4">
+        <div className="hidden sm:block lg:flex-1 p-4">
           <Image
             src={bannerImg}
             alt="Authentication illustration"
@@ -40,7 +40,7 @@ export const AuthLayout = ({
             </p>
           </div>
         </div>
-        <div className="w-full flex-1  bg-white rounded-2xl p-6 sm:p-10 lg:p-16 !text-gray-900 shadow-md flex items-center justify-center relative">
+        <div className="w-full lg:flex-1  h-fit bg-white rounded-2xl p-6 sm:p-10 lg:p-16 !text-gray-900 shadow-md flex items-center justify-center relative">
           <div className="flex flex-col justify-center mx-auto w-full">
             <h2 className="text-white text-center bg-blue-600 text-2xl sm:text-3xl font-semibold rounded-lg px-4 py-1 leading-tight w-fit mx-auto mb-2 sm:mb-2">
               Invoify

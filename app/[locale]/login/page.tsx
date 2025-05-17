@@ -42,7 +42,7 @@ export default function LoginPage() {
         <p>Welcome back to Invoify!</p>
       </div> */}
 
-      <form className="space-y-4 w-full max-w-full" onSubmit={handleSubmit}>
+      <form className="space-y-4 max-w-full" onSubmit={handleSubmit}>
         <FormInput
           type="text"
           required
