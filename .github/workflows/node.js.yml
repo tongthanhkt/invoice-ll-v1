@@ -16,14 +16,16 @@ jobs:
         node-version: [20.x]
 
     steps:
-      - run: echo "🎉 Job triggered by ${{ github.event_name }}"
-      - run: echo "🐧 Running on ${{ runner.os }}"
-      - run: echo "🔎 Branch: ${{ github.ref }} | Repo: ${{ github.repository }}"
+      - name: Print event info
+        run: |
+          echo "🎉 Job triggered by ${{ github.event_name }}"
+          echo "🐧 Running on ${{ runner.os }}"
+          echo "🔎 Branch: ${{ github.ref }} | Repo: ${{ github.repository }}"
 
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: List repository files
+      - name: List repo files
         run: ls -la
 
       - name: Install dependencies
@@ -38,19 +40,15 @@ jobs:
       - name: Zip project into frontend.zip
         run: zip -r frontend.zip . -x "*.git*"
 
-      # Add SSH key
       - name: Setup SSH key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_KEY }}
           known_hosts: "unnecessary"
 
-      # Upload .zip to ~/ on server using SCP
       - name: Upload frontend.zip to server
-        run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa frontend.zip ubuntu@18.143.75.112:~/
+        run: scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa frontend.zip ubuntu@18.143.75.112:~/
 
-      # SSH to server to unzip and run app
       - name: SSH to server, unzip and start app
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@18.143.75.112 << 'EOF'
