@@ -41,8 +41,8 @@ jobs:
       - run: sudo rm -rf .git
 
       # --- Zip thư mục frontend trước khi deploy ---
-      - name: Zip frontend folder
-        run: zip -r frontend.zip frontend/
+      - name: Zip invoice-ll folder
+        run: zip -r frontend.zip invoice-ll/
 
       # Đặt SSH Key trước rsync
       - name: Install SSH Key
