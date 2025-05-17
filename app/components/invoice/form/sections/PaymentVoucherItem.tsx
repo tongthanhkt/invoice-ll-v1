@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useCallback, useState } from "react";
+import { useCallback, useState } from 'react';
 
 // RHF
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 // DnD
 import {
@@ -15,41 +15,40 @@ import {
   UniqueIdentifier,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   SortableContext,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+} from '@dnd-kit/sortable';
 
 // Components
 
 // Contexts
-import { useTranslationContext } from "@/contexts/TranslationContext";
+import { useTranslationContext } from '@/contexts/TranslationContext';
 
 // Icons
-import { Plus } from "lucide-react";
+import { Plus } from 'lucide-react';
 
 // Types
-import { BaseButton } from "@/app/components";
-import { InvoiceType } from "@/types";
-import VoucherSingleItem from "../VoucherSingleItem";
+import { BaseButton } from '@/app/components';
+import { InvoiceType } from '@/types';
+import VoucherSingleItem from '../VoucherSingleItem';
 
 const PaymentVoucherItem = () => {
   const { control, setValue } = useFormContext<InvoiceType>();
 
   const { _t } = useTranslationContext();
 
-  const ITEMS_NAME = "details.items";
+  const ITEMS_NAME = 'details.items';
   const { fields, append, remove, move } = useFieldArray({
     control: control,
     name: ITEMS_NAME,
   });
 
-  console.log("fields", fields);
   const addNewField = () => {
     append({
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       quantity: 1,
       unitPrice: 0,
       total: 0,
@@ -143,7 +142,7 @@ const PaymentVoucherItem = () => {
         className="bg-white rounded-lg text-blue-500 hover:bg-blue-50 border-0 py-0 h-8 w-fit ml-auto flex items-center gap-2 -mr-2"
       >
         <Plus />
-        {_t("form.steps.lineItems.addNewItem")}
+        {_t('form.steps.lineItems.addNewItem')}
       </BaseButton>
     </section>
   );

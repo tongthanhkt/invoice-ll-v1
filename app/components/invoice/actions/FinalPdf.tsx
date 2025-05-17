@@ -1,23 +1,21 @@
-"use client";
+'use client';
 
 // ShadCn
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 // Components
-import { BaseButton, SendPdfToEmailModal, Subheading } from "@/app/components";
+import { BaseButton } from '@/app/components';
 
 // Contexts
-import { useInvoiceContext } from "@/contexts/InvoiceContext";
+import { useInvoiceContext } from '@/contexts/InvoiceContext';
 
 // Icons
 import {
   BookmarkIcon,
   DownloadCloudIcon,
   Eye,
-  Mail,
   MoveLeft,
   Printer,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function FinalPdf() {
   const {
@@ -31,62 +29,78 @@ export default function FinalPdf() {
   } = useInvoiceContext();
 
   return (
-    <>
-      <div className="flex flex-row items-center justify-between mb-2 h-fit">
-        <div className="flex items-center ">
+    <div className="flex flex-col h-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-2 px-2 sm:px-4 border-b border-neutral-200 bg-white sticky top-0 z-10">
+        <div className="flex items-center mb-2 sm:mb-0">
           <BaseButton
-            variant={"ghost"}
+            variant="ghost"
             tooltipLabel="Back to preview"
             size="sm"
             onClick={removeFinalPdf}
-            className=" text-neutral-700 flex flex-row items-center gap-2"
+            className="text-neutral-700 hover:text-blue-600 flex items-center gap-1.5"
           >
-            <MoveLeft className="w-5 h-5" />
+            <MoveLeft className="w-4 h-4" />
+            <span>Back to editor</span>
           </BaseButton>
         </div>
-        {/* Buttons */}
-        <div className="flex flex-wrap gap-2 my-1">
+
+        {/* Actions toolbar */}
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
           <BaseButton
             tooltipLabel="Preview invoice in new tab"
             onClick={previewPdfInTab}
             size="sm"
-            variant={"outline"}
+            variant="outline"
+            className="flex items-center gap-1.5 h-9 px-3"
           >
-            <Eye className="w-5 h-5" />
+            <Eye className="w-4 h-4" />
+            <span className="hidden sm:inline">Preview</span>
           </BaseButton>
+
           <BaseButton
             tooltipLabel="Download invoice PDF"
             onClick={downloadPdf}
             size="sm"
-            variant={"outline"}
+            variant="outline"
+            className="flex items-center gap-1.5 h-9 px-3"
           >
-            <DownloadCloudIcon className="w-5 h-5" />
+            <DownloadCloudIcon className="w-4 h-4" />
+            <span className="hidden sm:inline">Download</span>
           </BaseButton>
 
           <BaseButton
             tooltipLabel="Print invoice"
             onClick={printPdf}
             size="sm"
-            variant={"outline"}
+            variant="outline"
+            className="flex items-center gap-1.5 h-9 px-3"
           >
-            <Printer className="w-5 h-5" />
+            <Printer className="w-4 h-4" />
+            <span className="hidden sm:inline">Print</span>
           </BaseButton>
 
           <BaseButton
             tooltipLabel="Save invoice in website"
             onClick={saveInvoice}
             size="sm"
-            variant={"outline"}
+            variant="default"
+            className="flex items-center gap-1.5 h-9 px-3 bg-blue-500 text-white hover:bg-blue-600"
           >
-            <BookmarkIcon className="w-5 h-5" />
+            <BookmarkIcon className="w-4 h-4" />
+            <span className="hidden sm:inline">Save</span>
           </BaseButton>
         </div>
       </div>
 
-      <iframe
-        className=" w-full  h-[calc(100vh_-_308px)] overflow-y-scroll"
-        src={`${pdfUrl}#toolbar=0`}
-      />
-    </>
+      <div className="flex-grow bg-neutral-100 p-4">
+        <div className="max-w-[850px] mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+          <iframe
+            className="w-full h-[calc(100vh_-_140px)]"
+            src={`${pdfUrl}#toolbar=0`}
+            frameBorder="0"
+          />
+        </div>
+      </div>
+    </div>
   );
 }

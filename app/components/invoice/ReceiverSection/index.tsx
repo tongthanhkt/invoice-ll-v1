@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import CreatableSelect from "react-select/creatable";
-import { Label } from "@/components/ui/label";
-import { useFormContext } from "react-hook-form";
-import { AppSelect } from "../../reusables/form-fields/AppSelect";
-import { SectionContainer } from "../SectionContainer";
+import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { AppSelect } from '../../reusables/form-fields/AppSelect';
+import { ReceiverCombined } from '../InvoiceMain';
+import { SectionContainer } from '../SectionContainer';
+
 interface Receiver {
   _id: string;
   name: string;
   emails: string[];
+  addresses?: string[];
 }
 
 interface SelectOption {
@@ -17,36 +18,51 @@ interface SelectOption {
 }
 
 interface ReceiverSectionProps {
-  receivers: Receiver[];
-  receiverEmails: SelectOption[];
-  receiverAddresses: SelectOption[];
-  selectedReceiver: SelectOption | null;
-  selectedReceiverEmail: SelectOption | null;
-  selectedReceiverAddress: SelectOption | null;
-  setReceivers: (receivers: Receiver[]) => void;
-  setReceiverEmails: (emails: SelectOption[]) => void;
-  setReceiverAddresses: (addresses: SelectOption[]) => void;
-  setSelectedReceiver: (receiver: SelectOption | null) => void;
-  setSelectedReceiverEmail: (email: SelectOption | null) => void;
-  setSelectedReceiverAddress: (address: SelectOption | null) => void;
+  receiversData?: ReceiverCombined;
 }
 
-export const ReceiverSection = ({
-  receivers = [],
-  receiverEmails = [],
-  receiverAddresses = [],
-  selectedReceiver = null,
-  selectedReceiverEmail = null,
-  selectedReceiverAddress = null,
-  setReceivers,
-  setReceiverEmails,
-  setReceiverAddresses,
-  setSelectedReceiver,
-  setSelectedReceiverEmail,
-  setSelectedReceiverAddress,
-}: ReceiverSectionProps) => {
+export const ReceiverSection = ({ receiversData }: ReceiverSectionProps) => {
   const methods = useFormContext();
   const { setValue } = methods;
+
+  // Initialize with data from props
+  const [receivers, setReceivers] = useState<Receiver[]>([]);
+  const [receiverEmails, setReceiverEmails] = useState<SelectOption[]>([]);
+  const [receiverAddresses, setReceiverAddresses] = useState<SelectOption[]>(
+    []
+  );
+
+  // Update state when props change
+  useEffect(() => {
+    if (receiversData?.receivers) {
+      setReceivers(receiversData.receivers);
+    }
+
+    if (receiversData?.emails) {
+      const emailOptions = receiversData.emails.map((email) => ({
+        value: email.email,
+        label: email.email,
+      }));
+      setReceiverEmails(emailOptions);
+    }
+
+    if (receiversData?.addresses) {
+      const addressOptions = receiversData.addresses.map((address) => ({
+        value: address.address,
+        label: address.address,
+      }));
+      setReceiverAddresses(addressOptions);
+    }
+  }, [receiversData]);
+
+  // Initialize select options
+  const [selectedReceiver, setSelectedReceiver] = useState<SelectOption | null>(
+    null
+  );
+  const [selectedReceiverEmail, setSelectedReceiverEmail] =
+    useState<SelectOption | null>(null);
+  const [selectedReceiverAddress, setSelectedReceiverAddress] =
+    useState<SelectOption | null>(null);
 
   return (
     <SectionContainer title="Receiver Details">
@@ -62,19 +78,19 @@ export const ReceiverSection = ({
           onChange={(option: any) => {
             setSelectedReceiver(option);
             if (!option) {
-              setValue("receiver.name", "");
+              setValue('receiver.name', '');
             } else if (option?.__isNew__) {
-              setValue("receiver.name", option.label);
+              setValue('receiver.name', option.label);
             } else {
-              setValue("receiver.name", option.label);
+              setValue('receiver.name', option.label);
             }
           }}
           onCreateOption={async (inputValue: string) => {
             try {
-              const response = await fetch("/api/receivers", {
-                method: "POST",
+              const response = await fetch('/api/receivers', {
+                method: 'POST',
                 headers: {
-                  "Content-Type": "application/json",
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                   name: inputValue,
@@ -82,7 +98,7 @@ export const ReceiverSection = ({
               });
 
               if (!response.ok) {
-                throw new Error("Failed to create receiver");
+                throw new Error('Failed to create receiver');
               }
 
               const newReceiver = await response.json();
@@ -91,13 +107,13 @@ export const ReceiverSection = ({
                 value: newReceiver._id,
                 label: newReceiver.name,
               });
-              setValue("receiver.name", newReceiver.name);
+              setValue('receiver.name', newReceiver.name);
               return {
                 value: newReceiver._id,
                 label: newReceiver.name,
               };
             } catch (error) {
-              console.error("Error creating receiver:", error);
+              console.error('Error creating receiver:', error);
               return null;
             }
           }}
@@ -113,19 +129,19 @@ export const ReceiverSection = ({
           onChange={(option: any) => {
             setSelectedReceiverEmail(option);
             if (!option) {
-              setValue("receiver.email", "");
+              setValue('receiver.email', '');
             } else if (option?.__isNew__) {
-              setValue("receiver.email", option.label);
+              setValue('receiver.email', option.label);
             } else {
-              setValue("receiver.email", option.value);
+              setValue('receiver.email', option.value);
             }
           }}
           onCreateOption={async (inputValue: string) => {
             try {
-              const response = await fetch("/api/receiver-emails", {
-                method: "POST",
+              const response = await fetch('/api/receiver-emails', {
+                method: 'POST',
                 headers: {
-                  "Content-Type": "application/json",
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                   email: inputValue,
@@ -133,7 +149,7 @@ export const ReceiverSection = ({
               });
 
               if (!response.ok) {
-                throw new Error("Failed to create receiver email");
+                throw new Error('Failed to create receiver email');
               }
 
               const newEmail = await response.json();
@@ -148,13 +164,13 @@ export const ReceiverSection = ({
                 value: newEmail.email,
                 label: newEmail.email,
               });
-              setValue("receiver.email", newEmail.email);
+              setValue('receiver.email', newEmail.email);
               return {
                 value: newEmail.email,
                 label: newEmail.email,
               };
             } catch (error) {
-              console.error("Error creating receiver email:", error);
+              console.error('Error creating receiver email:', error);
               return null;
             }
           }}
@@ -170,19 +186,19 @@ export const ReceiverSection = ({
           onChange={(option: any) => {
             setSelectedReceiverAddress(option);
             if (!option) {
-              setValue("receiver.address", "");
+              setValue('receiver.address', '');
             } else if (option?.__isNew__) {
-              setValue("receiver.address", option.label);
+              setValue('receiver.address', option.label);
             } else {
-              setValue("receiver.address", option.value);
+              setValue('receiver.address', option.value);
             }
           }}
           onCreateOption={async (inputValue: string) => {
             try {
-              const response = await fetch("/api/receiver-addresses", {
-                method: "POST",
+              const response = await fetch('/api/receiver-addresses', {
+                method: 'POST',
                 headers: {
-                  "Content-Type": "application/json",
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                   address: inputValue,
@@ -190,7 +206,7 @@ export const ReceiverSection = ({
               });
 
               if (!response.ok) {
-                throw new Error("Failed to create receiver address");
+                throw new Error('Failed to create receiver address');
               }
 
               const newAddress = await response.json();
@@ -205,13 +221,13 @@ export const ReceiverSection = ({
                 value: newAddress.address,
                 label: newAddress.address,
               });
-              setValue("receiver.address", newAddress.address);
+              setValue('receiver.address', newAddress.address);
               return {
                 value: newAddress.address,
                 label: newAddress.address,
               };
             } catch (error) {
-              console.error("Error creating receiver address:", error);
+              console.error('Error creating receiver address:', error);
               return null;
             }
           }}
