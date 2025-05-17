@@ -42,7 +42,7 @@ jobs:
 
       # --- Zip thư mục frontend trước khi deploy ---
       - name: Zip invoice-ll folder
-        run: zip -r frontend.zip invoice-ll/
+        run: zip -r frontend.zip .
 
       # Đặt SSH Key trước rsync
       - name: Install SSH Key
