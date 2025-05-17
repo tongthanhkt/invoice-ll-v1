@@ -4,7 +4,7 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   push:
     branches:
-      - clone/entiti/responsive  
+      - main
 
 jobs:
   deployment:
